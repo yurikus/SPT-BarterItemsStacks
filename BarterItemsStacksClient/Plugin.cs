@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace BarterItemsStacksClient
 {
-    [BepInPlugin("com.slpf.barteritemsstacks", "BarterItemsStacksClient", "1.1.0")]
+    [BepInPlugin("com.slpf.barteritemsstacks", "BarterItemsStacksClient", "1.1.2")]
     public class Plugin : BaseUnityPlugin
     {
         public static ManualLogSource LogSource;
@@ -16,11 +16,11 @@ namespace BarterItemsStacksClient
             LogSource = Logger;
 
             new UpdateItemViewPatch().Enable();
-            //new MergePatch().Enable();
+            new MergePatch().Enable();
+            new TransferMaxPatch().Enable();
             new HideoutMethod23Patch().Enable();
             new HideoutMethod21Patch().Enable();
         }
     }
 
 }
-

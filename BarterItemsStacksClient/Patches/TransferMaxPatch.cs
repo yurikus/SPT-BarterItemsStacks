@@ -5,19 +5,19 @@ using System.Reflection;
 
 namespace BarterItemsStacksClient.Patches
 {
-    internal class MergePatch : ModulePatch
+    internal class TransferMaxPatch : ModulePatch
     {
         protected override MethodBase GetTargetMethod()
         {
-            return AccessTools.Method(typeof(InteractionsHandlerClass), nameof(InteractionsHandlerClass.Merge));
+            return AccessTools.Method(typeof(InteractionsHandlerClass), nameof(InteractionsHandlerClass.TransferMax));
         }
 
         [PatchPrefix]
-        public static bool Prefix(InteractionsHandlerClass __instance, Item item, Item targetItem, TraderControllerClass itemController, bool simulate, ref GStruct154<GClass3417> __result)
+        public static bool Prefix(InteractionsHandlerClass __instance, Item item, Item targetItem, int count, TraderControllerClass itemController, bool simulate, ref GStruct154<GClass3425> __result)
         {
             if (item.SpawnedInSession != targetItem.SpawnedInSession)
-            {
-                __result = new GClass1522("Cannot merge FIR and non-FIR items");
+            { 
+                __result = new GClass1522("Cannot transfer FIR and non-FIR items");
                 return false;
             }
 
@@ -26,7 +26,7 @@ namespace BarterItemsStacksClient.Patches
 
             if (itemResource != null && targetResource != null && itemResource.Value != targetResource.Value)
             {
-                __result = new GClass1522("Cannot merge items with different resource values");
+                __result = new GClass1522("Cannot transfer items with different resource values");
                 return false;
             }
 
