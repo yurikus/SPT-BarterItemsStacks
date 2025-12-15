@@ -1,5 +1,4 @@
-﻿using BepInEx.Logging;
-using EFT.InventoryLogic;
+﻿using EFT.InventoryLogic;
 using HarmonyLib;
 using SPT.Reflection.Patching;
 using System;

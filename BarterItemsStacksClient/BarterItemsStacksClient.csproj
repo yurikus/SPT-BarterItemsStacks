@@ -6,7 +6,7 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{E27F8FEF-4003-4496-B6D5-73FD7A314B49}</ProjectGuid>
     <OutputType>Library</OutputType>
-    <Version>1.1.2</Version>
+    <Version>1.2.0</Version>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>BarterItemsStacksClient</RootNamespace>
     <AssemblyName>BarterItemsStacksClient</AssemblyName>
@@ -32,13 +32,25 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Patches\ConvertOperationResultToOperationPatch.cs" />
+    <Compile Include="Patches\PlaceItemTriggerPatch.cs" />
+    <Compile Include="InteractionsHandlerClassExtensions.cs" />
+    <Compile Include="RemoveOneFromStack\RemoveOneFromStackDescriptor.cs" />
+    <Compile Include="RemoveOneFromStack\RemoveOneFromStackOperation.cs" />
+    <Compile Include="Patches\CanApplyItemPatch.cs" />
+    <Compile Include="Patches\COCCheckCompatibilityPatch.cs" />
+    <Compile Include="Patches\ExecutePossibleActionPatch.cs" />
     <Compile Include="Patches\HideoutMethod21Patch.cs" />
     <Compile Include="Patches\MergePatch.cs" />
+    <Compile Include="Patches\RepaitKitStackUsePatch.cs" />
     <Compile Include="Patches\TransferMaxPatch.cs" />
     <Compile Include="Patches\UpdateItemViewPatch.cs" />
     <Compile Include="Patches\HideoutMethod23Patch.cs" />
     <Compile Include="Plugin.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RemoveOneFromStack\RemoveOneFromStackResult.cs" />
+    <Compile Include="RemoveOneFromStack\RemoveOneFromStackModel.cs" />
+    <Compile Include="Utils.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="0Harmony, Version=2.9.0.0, Culture=neutral, processorArchitecture=MSIL">
@@ -55,13 +67,25 @@
     <Reference Include="Comfort">
       <HintPath>..\..\EscapeFromTarkov_Data\Managed\Comfort.dll</HintPath>
     </Reference>
+    <Reference Include="Comfort.Unity, Version=1.0.0.4, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\EscapeFromTarkov_Data\Managed\Comfort.Unity.dll</HintPath>
+    </Reference>
     <Reference Include="ItemComponent.Types, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\EscapeFromTarkov_Data\Managed\ItemComponent.Types.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\EscapeFromTarkov_Data\Managed\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="Sirenix.Serialization">
       <HintPath>..\..\EscapeFromTarkov_Data\Managed\Sirenix.Serialization.dll</HintPath>
+    </Reference>
+    <Reference Include="spt-common, Version=4.0.6.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\BepInEx\plugins\spt\spt-common.dll</HintPath>
     </Reference>
     <Reference Include="spt-core">
       <HintPath>..\..\BepInEx\plugins\spt\spt-core.dll</HintPath>

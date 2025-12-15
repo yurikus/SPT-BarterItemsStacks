@@ -21,12 +21,27 @@ namespace BarterItemsStacksClient.Patches
                 return false;
             }
 
-            var itemResource = item.GetItemComponent<ResourceComponent>();
-            var targetResource = targetItem.GetItemComponent<ResourceComponent>();
-
-            if (itemResource != null && targetResource != null && itemResource.Value != targetResource.Value)
+            if (!Utils.CheckBothItems<ResourceComponent>(item, targetItem))
             {
                 __result = new GClass1522("Cannot merge items with different resource values");
+                return false;
+            }
+
+            if (!Utils.CheckBothItems<MedKitComponent>(item, targetItem))
+            {
+                __result = new GClass1522("Cannot merge items with different med resource values");
+                return false;
+            }
+
+            if (!Utils.CheckBothItems<FoodDrinkComponent>(item, targetItem))
+            {
+                __result = new GClass1522("Cannot merge items with different food resource values");
+                return false;
+            }
+
+            if (!Utils.CheckBothItems<RepairKitComponent>(item, targetItem))
+            {
+                __result = new GClass1522("Cannot merge items with different repair resource values");
                 return false;
             }
 
