@@ -20,7 +20,7 @@ public record ModMetadata : AbstractModMetadata
     public override string Name { get; init; } = "Barter Items Stacks";
     public override string Author { get; init; } = "SLPF";
     public override List<string>? Contributors { get; init; }
-    public override SemanticVersioning.Version Version { get; init; } = new("1.2.1");
+    public override SemanticVersioning.Version Version { get; init; } = new("1.2.2");
     public override SemanticVersioning.Range SptVersion { get; init; } = new("~4.0.0");
     public override List<string>? Incompatibilities { get; init; }
     public override Dictionary<string, SemanticVersioning.Range>? ModDependencies { get; init; }
@@ -63,16 +63,20 @@ public class ItemsConfig
 public class BarterItemsStacks(ModHelper modHelper, DatabaseServer databaseServer, JsonUtil jsonUtil, ConfigReload configReload, ISptLogger<BarterItemsStacks> logger) : IOnLoad
 {
     public const string RofsRouter = "RemoveOneFromStack";
+    private readonly record struct DefaultProps(int? StackMaxSize, int? MaxResource, int? MaxHpResource, int? MaxRepairResource);
+    private readonly Dictionary<string, DefaultProps> _defaults = new(StringComparer.Ordinal);
+    private readonly HashSet<string> _lastApplied = new(StringComparer.Ordinal);
 
     public Task OnLoad()
     {
         var pathToMod = modHelper.GetAbsolutePathToModFolder(Assembly.GetExecutingAssembly());
 
-        LoadConfig(pathToMod);
+        if (LoadConfig(pathToMod))
+        {
+            logger.LogWithColor("[BarterItemsStacks] Config loaded.", LogTextColor.Green, LogBackgroundColor.Black);
+        }
 
         configReload.Start(pathToMod, ItemsConfig.FileName, () => { return Task.FromResult(LoadConfig(pathToMod)); });
-
-        logger.LogWithColor("[BarterItemsStacks] Config loaded.", LogTextColor.Green, LogBackgroundColor.Black);
 
         BaseInteractionRequestDataConverter.RegisterModDataHandler(RofsRouter, jsonUtil.Deserialize<RemoveOneFromStack.RemoveOneFromStackModel>);
 
@@ -84,6 +88,23 @@ public class BarterItemsStacks(ModHelper modHelper, DatabaseServer databaseServe
         try
         {
             var itemsDb = databaseServer.GetTables().Templates.Items;
+
+            foreach (var tpl in _lastApplied)
+            {
+                if (itemsDb.TryGetValue(tpl, out TemplateItem template))
+                {
+                    var prev = template.Properties;
+                    if (prev != null && _defaults.TryGetValue(tpl, out var def))
+                    {
+                        prev.StackMaxSize = def.StackMaxSize;
+                        prev.MaxResource = def.MaxResource;
+                        prev.MaxHpResource = def.MaxHpResource;
+                        prev.MaxRepairResource = def.MaxRepairResource;
+                    }
+                }
+            }
+            _lastApplied.Clear();
+
             var config = modHelper.GetJsonDataFromFile<ItemsConfig>(pathToMod, ItemsConfig.FileName);
 
             foreach (var item in config.Items)
@@ -101,9 +122,22 @@ public class BarterItemsStacks(ModHelper modHelper, DatabaseServer databaseServe
 
                         if (props != null)
                         {
+                            if (!_defaults.ContainsKey(item.Key))
+                            {
+                                _defaults[item.Key] = new DefaultProps(
+                                    props.StackMaxSize,
+                                    props.MaxResource,
+                                    props.MaxHpResource,
+                                    props.MaxRepairResource
+                                );
+                            }
+
+                            var changed = false;
+
                             if (stack > 0)
                             {
                                 props.StackMaxSize = stack;
+                                changed = true;
                             }
 
                             if (resource > 0)
@@ -111,16 +145,24 @@ public class BarterItemsStacks(ModHelper modHelper, DatabaseServer databaseServe
                                 if (props.MaxResource.HasValue)
                                 {
                                     props.MaxResource = resource;
+                                    changed = true;
                                 }
                                 else if (props.MaxHpResource.HasValue)
                                 {
                                     props.MaxHpResource = resource == 1 ? 0 : resource;
+                                    changed = true;
                                 }
                                 else if (props.MaxRepairResource.HasValue)
                                 {
                                     props.MaxRepairResource = resource;
+                                    changed = true;
                                 }
                             }
+
+                            if (changed)
+                            {
+                                _lastApplied.Add(item.Key);
+                            }  
                         }
                     }
                 }

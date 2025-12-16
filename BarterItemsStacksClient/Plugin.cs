@@ -1,16 +1,13 @@
 ﻿using BarterItemsStacksClient.Patches;
 using BepInEx;
-using BepInEx.Bootstrap;
 using BepInEx.Logging;
-using System;
 using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.SceneManagement;
 
 namespace BarterItemsStacksClient
 {
-    [BepInPlugin("com.slpf.barteritemsstacks", "BarterItemsStacksClient", "1.2.1")]
+    [BepInPlugin("com.slpf.barteritemsstacks", "BarterItemsStacksClient", "1.2.2")]
     [BepInDependency("com.lacyway.mc", BepInDependency.DependencyFlags.SoftDependency)]
+    [BepInDependency("com.tyfon.uifixes", BepInDependency.DependencyFlags.SoftDependency)]
     public class Plugin : BaseUnityPlugin
     {
         public static ManualLogSource LogSource;
@@ -31,9 +28,14 @@ namespace BarterItemsStacksClient
             new PlaceItemTriggerPatch().Enable();
             new ConvertOperationResultToOperationPatch().Enable();
 
-            if (Chainloader.PluginInfos.ContainsKey("com.lacyway.mc"))
+            if (HarmonyLib.AccessTools.TypeByName("MergeConsumables.Patches.ExecutePossibleAction_Patch") != null)
             {
                 new ExecutePossibleActionPatch().Enable();
+            }
+
+            if (HarmonyLib.AccessTools.TypeByName("UIFixes.SortPatches+StackFirstPatch") != null)
+            {
+                new StackAllPatch().Enable();
             }
         }
     }

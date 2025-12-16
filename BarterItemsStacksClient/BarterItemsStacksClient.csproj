@@ -35,6 +35,7 @@
     <Compile Include="Patches\ConvertOperationResultToOperationPatch.cs" />
     <Compile Include="Patches\PlaceItemTriggerPatch.cs" />
     <Compile Include="InteractionsHandlerClassExtensions.cs" />
+    <Compile Include="Patches\StackAllPatch.cs" />
     <Compile Include="RemoveOneFromStack\RemoveOneFromStackDescriptor.cs" />
     <Compile Include="RemoveOneFromStack\RemoveOneFromStackOperation.cs" />
     <Compile Include="Patches\CanApplyItemPatch.cs" />
