@@ -6,7 +6,6 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{E27F8FEF-4003-4496-B6D5-73FD7A314B49}</ProjectGuid>
     <OutputType>Library</OutputType>
-    <Version>1.2.0</Version>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>BarterItemsStacksClient</RootNamespace>
     <AssemblyName>BarterItemsStacksClient</AssemblyName>
@@ -32,21 +31,21 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Patches\Compatibility\MCExecutePossibleActionPatch.cs" />
+    <Compile Include="Patches\Compatibility\UIFixesStackAllPatch.cs" />
     <Compile Include="Patches\ConvertOperationResultToOperationPatch.cs" />
-    <Compile Include="Patches\PlaceItemTriggerPatch.cs" />
+    <Compile Include="Patches\Hideout\COCCheckCompatibilityPatch.cs" />
+    <Compile Include="Patches\Hideout\HideoutMethod21Patch.cs" />
+    <Compile Include="Patches\Hideout\HideoutMethod23Patch.cs" />
+    <Compile Include="Patches\Interactions\CanApplyItemPatch.cs" />
+    <Compile Include="Patches\Interactions\MergePatch.cs" />
+    <Compile Include="Patches\Interactions\RepaitKitStackUsePatch.cs" />
+    <Compile Include="Patches\Interactions\TransferMaxPatch.cs" />
     <Compile Include="InteractionsHandlerClassExtensions.cs" />
-    <Compile Include="Patches\StackAllPatch.cs" />
+    <Compile Include="Patches\Quest\PlaceItemTriggerPatch.cs" />
+    <Compile Include="Patches\UIGridItemView\UpdateItemViewPatch.cs" />
     <Compile Include="RemoveOneFromStack\RemoveOneFromStackDescriptor.cs" />
     <Compile Include="RemoveOneFromStack\RemoveOneFromStackOperation.cs" />
-    <Compile Include="Patches\CanApplyItemPatch.cs" />
-    <Compile Include="Patches\COCCheckCompatibilityPatch.cs" />
-    <Compile Include="Patches\ExecutePossibleActionPatch.cs" />
-    <Compile Include="Patches\HideoutMethod21Patch.cs" />
-    <Compile Include="Patches\MergePatch.cs" />
-    <Compile Include="Patches\RepaitKitStackUsePatch.cs" />
-    <Compile Include="Patches\TransferMaxPatch.cs" />
-    <Compile Include="Patches\UpdateItemViewPatch.cs" />
-    <Compile Include="Patches\HideoutMethod23Patch.cs" />
     <Compile Include="Plugin.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RemoveOneFromStack\RemoveOneFromStackResult.cs" />

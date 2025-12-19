@@ -24,9 +24,6 @@ namespace BarterItemsStacks
             _filePath = Path.Combine(pathToFile, fileName);
             _action = action;
 
-            //var dir = Path.GetDirectoryName(filePath);
-            //var fileName = Path.GetFileName(filePath);
-
             if (string.IsNullOrWhiteSpace(pathToFile) || string.IsNullOrWhiteSpace(fileName))
             {
                 logger.LogWithColor($"[BarterItemsStacks] Config Watcher Error >> Bad path: {_filePath}", LogTextColor.White, LogBackgroundColor.Red);
