@@ -1,6 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
 using Comfort.Common;
 using EFT;
@@ -30,13 +28,18 @@ namespace BarterItemsStacksClient.Patches.Quest
             if (item.StackObjectsCount <= 1)
                 return true;
             
-            var sortingTable = __instance.Inventory.SortingTable;
+            var location = __instance.Inventory.Equipment
+                .GetPrioritizedGridsForLoot(item)
+                .FindLocationForItem(item);
             
-            var location = sortingTable.Grid.FindLocationForItem(item);
-            
-            var beforeIds = new HashSet<string>(
-                __instance.Inventory.AllRealPlayerItems.Select(x => x.Id),
-                StringComparer.Ordinal);
+        // No space to split into -> fail without consuming whole stack
+            if (location == null)
+            {
+                
+                var noLocationSplit = InteractionsHandlerClass.SplitToNowhere(item, item.StackObjectsCount, __instance, __instance, true);
+                callback?.Invoke(noLocationSplit.ToResult());
+                return false;
+            }
 
             var split = InteractionsHandlerClass.SplitExact(item, 1, location, __instance, __instance, true);
             
@@ -54,22 +57,13 @@ namespace BarterItemsStacksClient.Patches.Quest
                         return;
                     }
 
-                    var newItem = __instance.Inventory.AllRealPlayerItems
-                        .FirstOrDefault(x =>
-                            x != null &&
-                            !beforeIds.Contains(x.Id) &&
-                            x.TemplateId == item.TemplateId &&
-                            x.StackObjectsCount == 1 &&
-                            x.CurrentAddress != null &&
-                            x.CurrentAddress.IsChildOf(sortingTable, false));
-
-                    if (newItem == null)
+                    Item splitItem = split.Value.ResultItem;
+                    if (__instance.TryFindItem(splitItem.Id, out Item currentSplitItem))
                     {
-                        callback?.Invoke(result);
-                        return;
+                        splitItem = currentSplitItem;
                     }
-                    
-                    __instance.SetupItem(newItem, zone, position, rotation, setupTime, callback);
+
+                    __instance.SetupItem(splitItem, zone, position, rotation, setupTime, callback);
                 }
             );
 
